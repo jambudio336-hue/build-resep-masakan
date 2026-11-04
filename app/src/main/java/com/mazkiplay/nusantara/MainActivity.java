@@ -14,7 +14,7 @@ public class MainActivity extends Activity{
    .setPositiveButton("BUKA",(d,w)->{if(et.getText().toString().trim().equals(CODE)){
     getSharedPreferences("p",0).edit().putBoolean("ok",true).apply();start();}else{wrong();new Handler().postDelayed(this::gate,400);}}).show();}
  void wrong(){Toast.makeText(this,"KODE SALAH!",Toast.LENGTH_SHORT).show();
-  ((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(new long[]{0,150,80,150,80,400});
+  ((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createWaveform(new long[]{0,150,80,150,80,400},-1));
   try{MediaPlayer.create(this,R.raw.scream).start();}catch(Exception e){}
  }
  void start(){askPerms();

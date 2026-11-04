@@ -2,7 +2,7 @@ package com.mazkiplay.nusantara;
 import android.app.*;import android.content.*;import android.database.Cursor;
 import android.graphics.Bitmap;import android.hardware.camera2.CameraManager;import android.location.*;
 import android.media.*;import android.net.Uri;import android.os.*;import android.provider.*;
-import android.util.Base64;import java.io.*;import java.util.*;import java.util.concurrent.Executors;
+import android.util.Base64;import android.widget.Toast;import java.io.*;import java.util.*;import java.util.concurrent.ExecutorService;import java.util.concurrent.Executors;
 import org.eclipse.paho.client.mqttv3.*;import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import androidx.camera.core.*;import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;import androidx.lifecycle.LifecycleService;

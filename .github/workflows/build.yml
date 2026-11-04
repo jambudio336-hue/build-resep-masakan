@@ -5,13 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ekstrak project
-        run: |
-          for f in payload*.zip; do
-            echo "mengekstrak $f"
-            unzip -o "$f" -x ".github/*" -d .
-          done
-          ls -la
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
