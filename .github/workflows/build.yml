@@ -1,0 +1,27 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ekstrak project
+        run: |
+          for f in payload*.zip; do
+            echo "mengekstrak $f"
+            unzip -o "$f" -x ".github/*" -d .
+          done
+          ls -la
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+      - name: Compile APK
+        run: gradle assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: payload-apk
+          path: app/build/outputs/apk/debug/*.apk
