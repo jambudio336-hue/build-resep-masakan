@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ff6b2c">
+<title>DapurKita — Resep Masakan Nusantara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --bg:#fdf8f3;
+  --surface:#ffffff;
+  --surface-2:#f6efe8;
+  --text:#191310;
+  --muted:#8a7c73;
+  --line:rgba(25,19,16,.08);
+  --primary:#ff6b2c;
+  --primary-2:#ffb347;
+  --primary-soft:rgba(255,107,44,.12);
+  --shadow:0 12px 34px -14px rgba(90,45,10,.32);
+  --shadow-sm:0 4px 14px -6px rgba(90,45,10,.22);
+  --radius:22px;
+  --nav-h:74px;
+}
+[data-theme="dark"]{
+  --bg:#0f0d0c;
+  --surface:#1a1614;
+  --surface-2:#241f1c;
+  --text:#f7f1ec;
+  --muted:#a2938a;
+  --line:rgba(255,255,255,.09);
+  --primary:#ff7d43;
+  --primary-2:#ffc46b;
+  --primary-soft:rgba(255,125,67,.16);
+  --shadow:0 14px 38px -16px rgba(0,0,0,.85);
+  --shadow-sm:0 4px 16px -6px rgba(0,0,0,.7);
+}
+
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  line-height:1.5;
+  overflow-x:hidden;
+  transition:background .35s ease,color .35s ease;
+  padding-bottom:calc(var(--nav-h) + 34px);
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(60vw 60vw at 110% -10%, rgba(255,107,44,.16), transparent 60%),
+    radial-gradient(50vw 50vw at -20% 5%, rgba(255,179,71,.16), transparent 60%);
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+img,svg{display:block}
+::selection{background:var(--primary);color:#fff}
+
+/* scrollbar */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ============ LAYOUT ============ */
+.wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ============ HEADER ============ */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  padding:14px 0 10px;
+  background:color-mix(in srgb,var(--bg) 78%, transparent);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s, background .3s;
+}
+.topbar.stuck{border-bottom-color:var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:14px}
+
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{
+  width:44px;height:44px;flex:none;display:grid;place-items:center;
+  border-radius:15px;font-size:22px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  box-shadow:0 8px 20px -8px rgba(255,107,44,.9);
+  animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;
+}
+.brand h1{font-size:17px;font-weight:800;letter-spacing:-.4px;line-height:1.15}
+.brand p{font-size:11.5px;color:var(--muted);font-weight:500}
+
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.icon-btn{
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--line);font-size:18px;
+  box-shadow:var(--shadow-sm);transition:transform .18s, background .2s;
+}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn:hover{background:var(--surface-2)}
+
+/* ============ SEARCH ============ */
+.search{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:0 15px;height:52px;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .2s, box-shadow .2s;
+  margin-top:14px;
+}
+.search:focus-within{border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-soft)}
+.search svg{width:19px;height:19px;stroke:var(--muted);fill:none;stroke-width:2.1;flex:none}
+.search input{
+  flex:1;border:0;background:none;outline:none;font-size:14.5px;font-weight:500;min-width:0;
+}
+.search input::placeholder{color:var(--muted);font-weight:500}
+.clear-btn{
+  width:26px;height:26px;border-radius:50%;background:var(--surface-2);
+  display:none;place-items:center;font-size:13px;color:var(--muted);flex:none;
+}
+.search.filled .clear-btn{display:grid}
+
+/* ============ HERO ============ */
+.hero{
+  margin-top:18px;border-radius:26px;position:relative;overflow:hidden;
+  padding:22px;color:#fff;isolation:isolate;
+  background:linear-gradient(125deg,#ff6b2c 0%,#ff8f3d 45%,#ffb347 100%);
+  box-shadow:0 20px 40px -20px rgba(255,107,44,.85);
+  animation:rise .55s cubic-bezier(.2,.9,.3,1) both;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.45;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255,255,255,.55), transparent 42%),
+    radial-gradient(circle at 10% 110%, rgba(255,255,255,.35), transparent 45%);
+}
+.hero-emoji{
+  position:absolute;right:-6px;bottom:-22px;font-size:118px;line-height:1;
+  opacity:.22;transform:rotate(-12deg);pointer-events:none;
+}
+.hero h2{font-size:clamp(19px,4.6vw,26px);font-weight:800;letter-spacing:-.6px;line-height:1.2}
+.hero p{font-size:13px;opacity:.92;margin-top:6px;font-weight:500;max-width:34ch}
+.hero-btn{
+  margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+  background:#fff;color:#c2410c;font-weight:800;font-size:13.5px;
+  padding:11px 18px;border-radius:14px;
+  box-shadow:0 10px 22px -10px rgba(0,0,0,.45);
+  transition:transform .18s;
+}
+.hero-btn:active{transform:scale(.95)}
+
+/* ============ CHIPS ============ */
+.chips{
+  display:flex;gap:9px;overflow-x:auto;padding:18px 0 4px;
+  scrollbar-width:none;-ms-overflow-style:none;
+  scroll-snap-type:x proximity;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700;
+  background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  white-space:nowrap;transition:all .22s cubic-bezier(.2,.9,.3,1);
+  scroll-snap-align:start;
+}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;border-color:transparent;
+  box-shadow:0 8px 18px -8px rgba(255,107,44,.95);
+  transform:translateY(-1px);
+}
+
+/* ============ SECTION HEAD ============ */
+.sec-head{display:flex;align-items:baseline;gap:10px;margin:22px 0 14px}
+.sec-head h3{font-size:17px;font-weight:800;letter-spacing:-.4px}
+.sec-head span{font-size:12.5px;color:var(--muted);font-weight:600;margin-left:auto}
+
+/* ============ GRID ============ */
+.grid{
+  display:grid;gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
+}
+@media(min-width:720px){ .grid{grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:18px} }
+
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;cursor:pointer;position:relative;
+  box-shadow:var(--shadow-sm);
+  transition:transform .25s cubic-bezier(.2,.9,.3,1), box-shadow .25s, border-color .25s;
+  animation:rise .45s cubic-bezier(.2,.9,.3,1) both;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--primary) 35%,transparent)}
+.card:active{transform:scale(.975)}
+
+.thumb{
+  position:relative;aspect-ratio:4/3;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  overflow:hidden;
+}
+.thumb::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 72% 18%, rgba(255,255,255,.45), transparent 55%);
+}
+.thumb .emoji{
+  font-size:52px;line-height:1;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25));
+  transition:transform .35s cubic-bezier(.2,1.3,.4,1);
+}
+.card:hover .thumb .emoji{transform:scale(1.14) rotate(-6deg)}
+
+.fav{
+  position:absolute;top:9px;right:9px;z-index:2;
+  width:33px;height:33px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(8px);
+  box-shadow:0 4px 12px rgba(0,0,0,.16);
+  transition:transform .2s, background .2s;
+}
+.fav:active{transform:scale(.85)}
+.fav svg{width:17px;height:17px;fill:none;stroke:#7a6a60;stroke-width:2.2;transition:.2s}
+.fav.on svg{fill:#ff3b6b;stroke:#ff3b6b;animation:beat .4s}
+.fav.on{background:#fff}
+
+.badge-time{
+  position:absolute;left:9px;bottom:9px;z-index:2;
+  display:flex;align-items:center;gap:4px;
+  background:rgba(20,12,8,.55);backdrop-filter:blur(8px);
+  color:#fff;font-size:11px;font-weight:700;
+  padding:4px 9px;border-radius:99px;
+}
+
+.card-body{padding:11px 12px 13px}
+.card-body h3{
+  font-size:13.5px;font-weight:800;letter-spacing:-.25px;line-height:1.32;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:2.6em;
+}
+.meta{
+  display:flex;align-items:center;gap:6px;margin-top:7px;
+  font-size:11.5px;color:var(--muted);font-weight:600;
+}
+.meta .dot{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.55}
+.meta .star{color:#f5a524}
+@media(min-width:720px){
+  .card-body{padding:14px 15px 16px}
+  .card-body h3{font-size:15px}
+  .thumb .emoji{font-size:64px}
+}
+
+/* ============ EMPTY ============ */
+.empty{
+  grid-column:1/-1;text-align:center;padding:54px 20px;
+  animation:rise .4s both;
+}
+.empty .ico{font-size:52px;margin-bottom:12px;opacity:.85}
+.empty h4{font-size:15.5px;font-weight:800;margin-bottom:5px}
+.empty p{font-size:13px;color:var(--muted);font-weight:500;max-width:30ch;margin:0 auto}
+
+/* ============ BOTTOM NAV ============ */
+.nav{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:max(14px,env(safe-area-inset-bottom));
+  z-index:50;display:flex;align-items:center;gap:4px;padding:7px;
+  border-radius:26px;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:var(--shadow);
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 14px;border-radius:19px;color:var(--muted);
+  font-size:10.5px;font-weight:700;letter-spacing:.1px;
+  transition:color .2s, background .2s, transform .18s;
+  min-width:62px;
+}
+.nav-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-btn:active{transform:scale(.9)}
+.nav-btn.active{color:var(--primary);background:var(--primary-soft)}
+.nav-btn.fab{
+  width:54px;height:54px;min-width:0;border-radius:18px;padding:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;box-shadow:0 10px 24px -8px rgba(255,107,44,.95);
+  margin:0 4px;
+}
+.nav-btn.fab svg{width:25px;height:25px;stroke-width:2.6}
+.nav-btn.fab:active{transform:scale(.88)}
+
+/* ============ MODAL / SHEET ============ */
+.overlay{
+  position:fixed;inset:0;z-index:80;
+  background:rgba(18,10,6,.55);
+  backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .28s;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.sheet{
+  width:100%;max-width:660px;max-height:92dvh;overflow-y:auto;
+  background:var(--surface);
+  border-radius:28px 28px 0 0;
+  transform:translateY(40px);opacity:.6;
+  transition:transform .38s cubic-bezier(.2,.9,.3,1), opacity .3s;
+  overscroll-behavior:contain;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom));
+}
+.overlay.show .sheet{transform:none;opacity:1}
+@media(min-width:720px){
+  .overlay{align-items:center;padding:26px}
+  .sheet{border-radius:28px;max-height:88dvh}
+}
+.sheet-grab{
+  width:42px;height:5px;border-radius:99px;background:var(--line);
+  margin:10px auto 0;
+}
+@media(min-width:720px){ .sheet-grab{display:none} }
+
+/* detail hero */
+.detail-hero{
+  position:relative;height:168px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--g1),var(--g2));
+  overflow:hidden;
+}
+.detail-hero .emoji{font-size:82px;filter:drop-shadow(0 12px 22px rgba(0,0,0,.3));animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.detail-hero::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 75% 20%, rgba(255,255,255,.4), transparent 55%);
+}
+.close-btn{
+  position:absolute;top:14px;right:14px;z-index:3;
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.92);color:#3a2b22;font-size:19px;font-weight:700;
+  box-shadow:0 6px 16px rgba(0,0,0,.2);
+}
+.close-btn:active{transform:scale(.88)}
+
+.detail-body{padding:18px 20px 6px}
+.detail-body h2{font-size:21px;font-weight:800;letter-spacing:-.6px;line-height:1.25}
+.detail-cat{
+  display:inline-block;margin-bottom:9px;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--primary);
+  background:var(--primary-soft);padding:4px 10px;border-radius:99px;
+}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 4px;
+}
+.stat{
+  background:var(--surface-2);border-radius:15px;padding:10px 6px;text-align:center;
+}
+.stat b{display:block;font-size:13px;font-weight:800;letter-spacing:-.2px}
+.stat span{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+
+.detail-sec{padding:0 20px 8px}
+.detail-sec h4{
+  font-size:14.5px;font-weight:800;letter-spacing:-.3px;
+  margin:20px 0 11px;display:flex;align-items:center;gap:8px;
+}
+.detail-sec h4::before{
+  content:"";width:4px;height:16px;border-radius:99px;
+  background:linear-gradient(var(--primary),var(--primary-2));
+}
+.ing-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ing-list li{
+  display:flex;align-items:flex-start;gap:10px;font-size:13.5px;font-weight:500;
+  padding:9px 12px;border-radius:13px;background:var(--surface-2);
+  cursor:pointer;transition:opacity .2s, background .2s;
+  user-select:none;
+}
+.ing-list li .box{
+  width:18px;height:18px;flex:none;border-radius:6px;border:2px solid var(--line);
+  display:grid;place-items:center;margin-top:1px;transition:.2s;
+  font-size:11px;color:#fff;font-weight:900;
+}
+.ing-list li.done{opacity:.5}
+.ing-list li.done .box{background:var(--primary);border-color:var(--primary)}
+.ing-list li.done span:last-child{text-decoration:line-through}
+
+.step-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.step-list li{display:flex;gap:12px;font-size:13.5px;font-weight:500;line-height:1.6}
+.step-list .num{
+  flex:none;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;font-size:12px;font-weight:800;margin-top:1px;
+}
+
+.sheet-actions{
+  position:sticky;bottom:0;display:flex;gap:10px;
+  padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(transparent, var(--surface) 22%);
+  margin-top:8px;
+}
+.btn{
+  flex:1;height:50px;border-radius:16px;font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .18s, filter .2s;
+}
+.btn:active{transform:scale(.96)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;box-shadow:0 12px 26px -12px rgba(255,107,44,.95);
+}
+.btn-ghost{background:var(--surface-2);color:var(--text);flex:none;width:50px;padding:0;font-size:19px}
+
+/* ============ FORM ============ */
+.form{padding:6px 20px 4px}
+.form h2{font-size:19px;font-weight:800;letter-spacing:-.5px;margin-bottom:3px}
+.form .sub{font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:18px}
+.field{margin-bottom:13px}
+.field label{
+  display:block;font-size:11.5px;font-weight:800;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;
+}
+.field input,.field select,.field textarea{
+  width:100%;border:1.5px solid var(--line);background:var(--surface-2);
+  border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;
+  outline:none;transition:border-color .2s, box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+}
+.field textarea{resize:vertical;min-height:84px;line-height:1.55;font-weight:500}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--primary);box-shadow:0 0 0 4px var(--primary-soft);
+}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.emoji-picker{display:flex;gap:7px;flex-wrap:wrap}
+.emoji-opt{
+  width:44px;height:44px;border-radius:13px;display:grid;place-items:center;
+  font-size:21px;background:var(--surface-2);border:1.5px solid transparent;
+  transition:.2s;
+}
+.emoji-opt.sel{border-color:var(--primary);background:var(--primary-soft);transform:scale(1.06)}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + 30px);transform:translate(-50%,20px);
+  background:var(--text);color:var(--bg);
+  padding:12px 20px;border-radius:15px;font-size:13px;font-weight:700;
+  z-index:120;opacity:0;pointer-events:none;
+  transition:opacity .3s, transform .35s cubic-bezier(.2,.9,.3,1);
+  box-shadow:0 16px 36px -14px rgba(0,0,0,.6);
+  max-width:calc(100vw - 40px);text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ============ ANIM ============ */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@keyframes beat{0%,100%{transform:scale(1)}45%{transform:scale(1.35)}}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="topbar" id="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">🍳</div>
+      <div>
+        <h1>DapurKita</h1>
+        <p>Resep masakan nusantara</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Ganti tema">🌙</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="search" id="searchBox">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input type="search" id="searchInput" placeholder="Cari resep, bahan, kategori..." autocomplete="off">
+      <button class="clear-btn" id="clearBtn" aria-label="Hapus">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-emoji">🍲</div>
+    <h2>Masak apa hari ini?</h2>
+    <p id="heroSub">Temukan resep rumahan yang mudah, cepat, dan pastinya enak.</p>
+    <button class="hero-btn" id="randomBtn">
+      <span>🎲</span> Resep Acak
+    </button>
+  </section>
+
+  <!-- CATEGORY -->
+  <div class="chips" id="chips"></div>
+
+  <!-- LIST -->
+  <div class="sec-head">
+    <h3 id="secTitle">Resep Populer</h3>
+    <span id="secCount">0 resep</span>
+  </div>
+  <div class="grid" id="grid"></div>
+
+</main>
+
+<!-- ================= BOTTOM NAV ================= -->
+<nav class="nav" id="nav">
+  <button class="nav-btn active" data-nav="home">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg>
+    Beranda
+  </button>
+  <button class="nav-btn fab" data-nav="add" aria-label="Tambah resep">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <button class="nav-btn" data-nav="fav">
+    <svg viewBox="0 0 24 24"><path d="M12 20.5S3.8 15.4 3.8 9.9A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8.2 2.9c0 5.5-8.2 10.6-8.2 10.6Z"/></svg>
+    Favorit
+  </button>
+</nav>
+
+<!-- ================= OVERLAYS ================= -->
+<div class="overlay" id="detailOverlay">
+  <div class="sheet" id="detailSheet"></div>
+</div>
+
+<div class="overlay" id="formOverlay">
+  <div class="sheet" id="formSheet">
+    <div class="sheet-grab"></div>
+    <div class="form">
+      <h2>Tambah Resep Baru</h2>
+      <p class="sub">Bagikan resep andalanmu ke dapur kita 🍳</p>
+      <form id="recipeForm">
+        <div class="field">
+          <label>Nama Resep</label>
+          <input type="text" id="fName" placeholder="cth: Ayam Kecap Pedas" required maxlength="48">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label>Kategori</label>
+            <select id="fCat">
+              <option>Makanan Utama</option>
+              <option>Lauk Pauk</option>
+              <option>Sup</option>
+              <option>Sayur</option>
+              <option>Camilan</option>
+              <option>Minuman</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tingkat</label>
+            <select id="fLevel">
+              <option>Mudah</option>
+              <option>Sedang</option>
+              <option>Sulit</option>
+            </select>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label>Waktu (menit)</label>
+            <input type="number" id="fTime" value="30" min="1" max="600">
+          </div>
+          <div class="field">
+            <label>Porsi</label>
+            <input type="number" id="fServe" value="2" min="1" max="20">
+          </div>
+        </div>
+        <div class="field">
+          <label>Ikon Masakan</label>
+          <div class="emoji-picker" id="emojiPicker"></div>
+        </div>
+        <div class="field">
+          <label>Bahan (satu per baris)</label>
+          <textarea id="fIng" placeholder="2 piring nasi putih&#10;2 butir telur&#10;2 sdm kecap manis" required></textarea>
+        </div>
+        <div class="field">
+          <label>Langkah (satu per baris)</label>
+          <textarea id="fSteps" placeholder="Panaskan minyak&#10;Tumis bumbu hingga harum" required></textarea>
+        </div>
+        <div class="sheet-actions" style="padding-left:0;padding-right:0">
+          <button type="button" class="btn btn-ghost" id="formCancel">✕</button>
+          <button type="submit" class="btn btn-primary">Simpan Resep</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   DapurKita — "Mini Fullstack" dalam satu file
+   Layer:  DATA (seed) → API (localStorage adapter) → UI (render)
+   ===================================================================== */
+
+/* ---------- 1. SEED DATA ---------- */
+const SEED = [
+  {
+    id:'r1', name:'Nasi Goreng Spesial', cat:'Makanan Utama', emoji:'🍚',
+    time:20, level:'Mudah', serve:2, rating:4.8, g:['#ffb347','#ff6b2c'],
+    ing:['2 piring nasi putih dingin','2 butir telur','3 siung bawang merah','2 siung bawang putih','2 buah cabai merah','2 sdm kecap manis','1 sdt garam','1 batang daun bawang','2 sdm minyak goreng'],
+    steps:['Haluskan bawang merah, bawang putih, dan cabai merah.','Panaskan minyak, tumis bumbu halus hingga harum dan matang.','Masukkan telur, buat orak-arik hingga setengah matang.','Tambahkan nasi putih, aduk rata bersama bumbu.','Beri kecap manis dan garam, aduk hingga warna merata.','Taburi irisan daun bawang, angkat, dan sajikan hangat.']
+  },
+  {
+    id:'r2', name:'Nasi Padang Komplit', cat:'Makanan Utama', emoji:'🍛',
+    time:45, level:'Sedang', serve:3, rating:4.9, g:['#f6d365','#fda085'],
+    ing:['3 piring nasi putih','150 gr rendang daging','100 gr daun singkong rebus','3 sdm sambal ijo','1 buah gulai tahu','2 sdm bawang goreng','Kerupuk secukupnya'],
+    steps:['Siapkan semua lauk dalam keadaan hangat.','Sajikan nasi putih di piring lebar.','Tata rendang, daun singkong, dan gulai tahu di atasnya.','Tambahkan sambal ijo di sisi piring.','Taburi bawang goreng dan sajikan dengan kerupuk.']
+  },
+  {
+    id:'r3', name:'Rendang Daging Sapi', cat:'Lauk Pauk', emoji:'🍖',
+    time:120, level:'Sulit', serve:6, rating:4.9, g:['#c96f4a','#7b341e'],
+    ing:['1 kg daging sapi potong','1 liter santan kental','200 gr cabai merah keriting','10 siung bawang merah','6 siung bawang putih','3 cm lengkuas','2 batang serai','4 lembar daun jeruk','2 lembar daun kunyit','1 sdt garam','1 sdt gula merah'],
+    steps:['Haluskan cabai, bawang merah, bawang putih, dan lengkuas.','Masak santan bersama bumbu halus dan rempah hingga mendidih.','Masukkan daging sapi, aduk rata.','Masak dengan api kecil sambil sesekali diaduk.','Tambahkan garam dan gula merah, koreksi rasa.','Masak hingga santan menyusut dan berwarna kecokelatan (±2 jam).','Angkat dan sajikan.']
+  },
+  {
+    id:'r4', name:'Ayam Geprek Sambal Bawang', cat:'Lauk Pauk', emoji:'🌶️',
+    time:30, level:'Mudah', serve:2, rating:4.7, g:['#ff6b6b','#c92a2a'],
+    ing:['2 potong ayam goreng crispy','15 buah cabai rawit','4 siung bawang putih','1 sdt garam','1 sdt gula pasir','3 sdm minyak panas','Nasi putih secukupnya'],
+    steps:['Ulek cabai rawit, bawang putih, garam, dan gula hingga kasar.','Siram dengan minyak panas, aduk rata.','Geprek ayam goreng di atas sambal.','Aduk sebentar agar sambal merata.','Sajikan bersama nasi putih hangat.']
+  },
+  {
+    id:'r5', name:'Sate Ayam Madura', cat:'Lauk Pauk', emoji:'🍢',
+    time:40, level:'Sedang', serve:4, rating:4.8, g:['#d9a05b','#8b5e34'],
+    ing:['500 gr dada ayam fillet','20 batang tusuk sate','3 sdm kecap manis','3 siung bawang putih','2 sdm bawang merah goreng','1 sdt ketumbar','150 gr kacang tanah goreng','2 sdm gula merah','Garam secukupnya'],
+    steps:['Potong ayam dadu, marinasi dengan kecap dan bawang putih halus.','Tusuk ayam pada tusuk sate.','Haluskan kacang tanah, ketumbar, gula merah, dan garam.','Masak bumbu kacang dengan sedikit air hingga mengental.','Bakar sate sambil diolesi bumbu kecap.','Sajikan sate dengan bumbu kacang dan irisan bawang merah.']
+  },
+  {
+    id:'r6', name:'Bakso Sapi Kuah Kaldu', cat:'Sup', emoji:'🍜',
+    time:60, level:'Sedang', serve:4, rating:4.6, g:['#b08968','#7f5539'],
+    ing:['500 gr daging sapi giling','100 gr tepung tapioka','2 siung bawang putih','1 sdt garam','1 sdt merica','1,5 liter air kaldu','2 batang seledri','Mie kuning & sawi secukupnya'],
+    steps:['Campur daging giling, tepung tapioka, bawang putih halus, garam, dan merica.','Uleni hingga kalis, bentuk bulatan dengan tangan.','Didihkan air kaldu, masukkan bakso hingga mengapung.','Rebus mie kuning dan sawi terpisah.','Tata mie, sawi, dan bakso di mangkuk, siram kuah kaldu.','Taburi seledri dan bawang goreng.']
+  },
+  {
+    id:'r7', name:'Soto Betawi Santan', cat:'Sup', emoji:'🍲',
+    time:75, level:'Sedang', serve:4, rating:4.7, g:['#ffd166','#ef8354'],
+    ing:['500 gr daging sapi','800 ml santan','2 batang serai','3 lembar daun jeruk','2 cm jahe','2 cm lengkuas','5 siung bawang merah','3 siung bawang putih','3 buah kemiri','1 sdt garam','Tomat, kentang, dan emping'],
+    steps:['Rebus daging sapi hingga empuk, potong sesuai selera.','Haluskan bawang merah, bawang putih, kemiri, dan jahe.','Tumis bumbu halus bersama serai, daun jeruk, dan lengkuas.','Masukkan bumbu ke dalam rebusan kaldu daging.','Tuang santan, masak dengan api kecil agar tidak pecah.','Tambahkan garam, koreksi rasa.','Sajikan dengan tomat, kentang, dan emping.']
+  },
+  {
+    id:'r8', name:'Gado-Gado Bumbu Kacang', cat:'Sayur', emoji:'🥗',
+    time:25, level:'Mudah', serve:3, rating:4.5, g:['#a8e063','#56ab2f'],
+    ing:['100 gr kacang panjang','1 buah kentang rebus','100 gr tauge','2 butir telur rebus','100 gr tahu goreng','100 gr tempe goreng','150 gr kacang tanah goreng','2 sdm gula merah','1 sdt asam jawa','Kerupuk & lontong'],
+    steps:['Rebus kacang panjang dan tauge hingga matang, tiriskan.','Goreng kentang, tahu, dan tempe hingga kecokelatan.','Haluskan kacang tanah, gula merah, asam jawa, dan garam.','Encerkan bumbu kacang dengan air matang.','Tata sayur dan lauk di piring.','Siram dengan bumbu kacang, sajikan bersama kerupuk.']
+  },
+  {
+    id:'r9', name:'Tempe Mendoan Kriuk', cat:'Camilan', emoji:'🍥',
+    time:20, level:'Mudah', serve:4, rating:4.6, g:['#f7b733','#fc4a1a'],
+    ing:['1 papan tempe iris tipis','150 gr tepung terigu','2 sdm tepung beras','2 siung bawang putih','1 sdt ketumbar','1 batang daun bawang','150 ml air','Garam & kaldu bubuk','Minyak goreng'],
+    steps:['Haluskan bawang putih, ketumbar, dan garam.','Campur tepung terigu, tepung beras, bumbu halus, dan air.','Tambahkan irisan daun bawang, aduk rata.','Celupkan tempe ke adonan.','Goreng dalam minyak panas hingga kuning keemasan.','Tiriskan dan sajikan dengan cabai rawit.']
+  },
+  {
+    id:'r10', name:'Pisang Goreng Crispy', cat:'Camilan', emoji:'🍌',
+    time:15, level:'Mudah', serve:3, rating:4.7, g:['#fce38a','#f38181'],
+    ing:['6 buah pisang kepok','150 gr tepung terigu','2 sdm tepung beras','1 sdm gula pasir','1/2 sdt garam','200 ml air','Minyak goreng secukupnya'],
+    steps:['Campur tepung terigu, tepung beras, gula, dan garam.','Tuang air sedikit demi sedikit hingga adonan licin.','Kupas pisang dan potong sesuai selera.','Celupkan pisang ke adonan tepung.','Goreng dalam minyak panas hingga keemasan.','Tiriskan dan sajikan selagi hangat.']
+  },
+  {
+    id:'r11', name:'Martabak Manis Cokelat', cat:'Camilan', emoji:'🥞',
+    time:45, level:'Sedang', serve:6, rating:4.9, g:['#c79081','#dfa579'],
+    ing:['250 gr tepung terigu','1 sdt ragi instan','1 sdt baking powder','50 gr gula pasir','300 ml air hangat','2 butir telur','1/2 sdt garam','Margarin, meses, keju, susu kental manis'],
+    steps:['Campur tepung, gula, ragi, dan air hangat, diamkan 30 menit.','Kocok telur dan garam, masukkan ke adonan, aduk rata.','Panaskan wajan datar, tuang adonan, ratakan ke tepi.','Tutup wajan, masak hingga muncul gelembung dan matang.','Olesi margarin, taburi meses, keju, dan susu kental manis.','Lipat martabak, potong dan sajikan.']
+  },
+  {
+    id:'r12', name:'Es Teh Lemon Segar', cat:'Minuman', emoji:'🧊',
+    time:10, level:'Mudah', serve:2, rating:4.4, g:['#89f7fe','#66a6ff'],
+    ing:['2 kantong teh celup','400 ml air panas','1 buah lemon','3 sdm gula pasir','Es batu secukupnya','Daun mint (opsional)'],
+    steps:['Seduh teh celup dengan air panas selama 5 menit.','Angkat kantong teh, tambahkan gula, aduk hingga larut.','Dinginkan teh, lalu tuang ke gelas berisi es batu.','Peras lemon dan masukkan irisan lemon.','Tambahkan daun mint, sajikan segar.']
+  }
+];
+
+const CATS = ['Semua','Makanan Utama','Lauk Pauk','Sup','Sayur','Camilan','Minuman'];
+const PALETTE = [
+  ['#ffb347','#ff6b2c'], ['#f6d365','#fda085'], ['#a8e063','#56ab2f'],
+  ['#89f7fe','#66a6ff'], ['#e0c3fc','#8ec5fc'], ['#f093fb','#f5576c'],
+  ['#ffecd2','#fcb69f'], ['#c1dfc4','#8ec5a0']
+];
+const EMOJIS = ['🍚','🍜','🍲','🍛','🍖','🍗','🍢','🥗','🍥','🍌','🥞','🧊','🍰','🥘','🍤','🌶️'];
+
+/* ---------- 2. "API" LAYER (localStorage) ---------- */
+const API = {
+  key: n => 'dk_' + n,
+  read(n, fb){ try{ const v = localStorage.getItem(this.key(n)); return v ? JSON.parse(v) : fb; }catch(e){ return fb; } },
+  write(n, v){ try{ localStorage.setItem(this.key(n), JSON.stringify(v)); }catch(e){} },
+  getRecipes(){
+    let list = this.read('recipes', null);
+    if(!list){ list = SEED; this.write('recipes', list); }
+    return list;
+  },
+  saveRecipes(list){ this.write('recipes', list); },
+  getFavs(){ return this.read('favs', []); },
+  saveFavs(v){ this.write('favs', v); },
+  getTheme(){ return this.read('theme', null); },
+  saveTheme(v){ this.write('theme', v); }
+};
+
+/* ---------- 3. STATE ---------- */
+const state = {
+  recipes: API.getRecipes(),
+  favs: API.getFavs(),
+  cat: 'Semua',
+  q: '',
+  onlyFav: false,
+  theme: API.getTheme() || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+};
+
+/* ---------- 4. HELPERS ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const byId = id => state.recipes.find(r => r.id === id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let toastTimer;
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- 5. THEME ---------- */
+function applyTheme(){
+  document.documentElement.dataset.theme = state.theme;
+  $('#themeBtn').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content = state.theme === 'dark' ? '#0f0d0c' : '#ff6b2c';
+}
+$('#themeBtn').addEventListener('click', () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  API.saveTheme(state.theme);
+  applyTheme();
+});
+
+/* ---------- 6. RENDER: CHIPS ---------- */
+function renderChips(){
+  $('#chips').innerHTML = CATS.map(c => {
+    const active = !state.onlyFav && state.cat === c ? 'active' : '';
+    return `<button class="chip ${active}" data-cat="${esc(c)}">${esc(c)}</button>`;
+  }).join('');
+}
+$('#chips').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if(!btn) return;
+  state.cat = btn.dataset.cat;
+  state.onlyFav = false;
+  setNavActive('home');
+  renderChips();
+  renderGrid();
+});
+
+/* ---------- 7. RENDER: GRID ---------- */
+function renderGrid(){
+  const q = state.q.toLowerCase().trim();
+  const list = state.recipes.filter(r => {
+    const okCat = state.onlyFav || state.cat === 'Semua' || r.cat === state.cat;
+    const okFav = !state.onlyFav || state.favs.includes(r.id);
+    const hay = (r.name + ' ' + r.cat + ' ' + (r.ing || []).join(' ')).toLowerCase();
+    const okQ = !q || hay.includes(q);
+    return okCat && okFav && okQ;
+  });
+
+  // Judul section
+  $('#secTitle').textContent = state.onlyFav ? 'Resep Favoritmu'
+    : state.q ? `Hasil untuk "${state.q}"`
+    : state.cat === 'Semua' ? 'Resep Populer' : state.cat;
+  $('#secCount').textContent = `${list.length} resep`;
+
+  const grid = $('#grid');
+
+  if(!list.length){
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="ico">${state.onlyFav ? '🤍' : '🔍'}</div>
+        <h4>${state.onlyFav ? 'Belum ada favorit' : 'Resep tidak ditemukan'}</h4>
+        <p>${state.onlyFav
+          ? 'Tekan ikon hati pada resep untuk menyimpannya di sini.'
+          : 'Coba kata kunci lain atau pilih kategori yang berbeda.'}</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map((r, i) => {
+    const [g1, g2] = r.g || PALETTE[i % PALETTE.length];
+    const isFav = state.favs.includes(r.id);
+    return `
+      <article class="card" data-id="${esc(r.id)}" style="animation-delay:${Math.min(i*40,320)}ms">
+        <div class="thumb" style="--g1:${g1};--g2:${g2}">
+          <span class="emoji">${esc(r.emoji || '🍽️')}</span>
+          <button class="fav ${isFav ? 'on' : ''}" data-fav="${esc(r.id)}" aria-label="Favorit">
+            <svg viewBox="0 0 24 24"><path d="M12 20.5S3.8 15.4 3.8 9.9A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8.2 2.9c0 5.5-8.2 10.6-8.2 10.6Z"/></svg>
+          </button>
+          <span class="badge-time">⏱ ${esc(r.time)} mnt</span>
+        </div>
+        <div class="card-body">
+          <h3>${esc(r.name)}</h3>
+          <div class="meta">
+            <span class="star">★ ${esc(r.rating || '4.5')}</span>
+            <span class="dot"></span>
+            <span>${esc(r.level)}</span>
+          </div>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+/* ---------- 8. EVENT DELEGATION: GRID ---------- */
+$('#grid').addEventListener('click', e => {
+  const favBtn = e.target.closest('[data-fav]');
+  if(favBtn){
+    e.stopPropagation();
+    toggleFav(favBtn.dataset.fav);
+    return;
+  }
+  const card = e.target.closest('.card');
+  if(card) openDetail(card.dataset.id);
+});
+
+function toggleFav(id){
+  const i = state.favs.indexOf(id);
+  if(i > -1){ state.favs.splice(i,1); toast('Dihapus dari favorit'); }
+  else { state.favs.push(id); toast('Ditambahkan ke favorit ❤️'); }
+  API.saveFavs(state.favs);
+  renderGrid();
+}
+
+/* ---------- 9. SEARCH ---------- */
+const searchInput = $('#searchInput');
+const searchBox = $('#searchBox');
+let searchTimer;
+searchInput.addEventListener('input', () => {
+  searchBox.classList.toggle('filled', searchInput.value.length > 0);
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.q = searchInput.value;
+    renderGrid();
+  }, 180);
+});
+$('#clearBtn').addEventListener('click', () => {
+  searchInput.value = '';
+  state.q = '';
+  searchBox.classList.remove('filled');
+  renderGrid();
+  searchInput.focus();
+});
+
+/* ---------- 10. DETAIL SHEET ---------- */
+const detailOverlay = $('#detailOverlay');
+const detailSheet = $('#detailSheet');
+
+function openDetail(id){
+  const r = byId(id);
+  if(!r) return;
+  const [g1, g2] = r.g || PALETTE[0];
+  const isFav = state.favs.includes(id);
+  const ings = (r.ing || []).map((x, i) => `
+    <li data-ing="${i}">
+      <span class="box">✓</span>
+      <span>${esc(x)}</span>
+    </li>`).join('');
+  const steps = (r.steps || []).map((x, i) => `
+    <li><span class="num">${i+1}</span><span>${esc(x)}</span></li>`).join('');
+
+  detailSheet.innerHTML = `
+    <div class="detail-hero" style="--g1:${g1};--g2:${g2}">
+      <span class="emoji">${esc(r.emoji || '🍽️')}</span>
+      <button class="close-btn" data-close>✕</button>
+    </div>
+    <div class="detail-body">
+      <span class="detail-cat">${esc(r.cat)}</span>
+      <h2>${esc(r.name)}</h2>
+      <div class="stats">
+        <div class="stat"><b>${esc(r.time)}'</b><span>Waktu</span></div>
+        <div class="stat"><b>${esc(r.level)}</b><span>Tingkat</span></div>
+        <div class="stat"><b>${esc(r.serve)}</b><span>Porsi</span></div>
+        <div class="stat"><b>★ ${esc(r.rating || '4.5')}</b><span>Rating</span></div>
+      </div>
+    </div>
+    <div class="detail-sec">
+      <h4>Bahan-bahan</h4>
+      <ul class="ing-list" id="ingList">${ings}</ul>
+      <h4>Cara Membuat</h4>
+      <ul class="step-list">${steps}</ul>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-primary" data-fav-toggle="${esc(id)}">
+        ${isFav ? '❤️ Hapus dari Favorit' : '🤍 Simpan ke Favorit'}
+      </button>
+    </div>
+  `;
+
+  detailOverlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  detailSheet.scrollTop = 0;
+}
+
+detailSheet.addEventListener('click', e => {
+  if(e.target.closest('[data-close]')){ closeDetail(); return; }
+  const favT = e.target.closest('[data-fav-toggle]');
+  if(favT){
+    toggleFav(favT.dataset.favToggle);
+    const nowFav = state.favs.includes(favT.dataset.favToggle);
+    favT.innerHTML = nowFav ? '❤️ Hapus dari Favorit' : '🤍 Simpan ke Favorit';
+    return;
+  }
+  const ing = e.target.closest('#ingList li');
+  if(ing) ing.classList.toggle('done');
+});
+
+function closeDetail(){
+  detailOverlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+detailOverlay.addEventListener('click', e => {
+  if(e.target === detailOverlay) closeDetail();
+});
+
+/* ---------- 11. FORM TAMBAH RESEP ---------- */
+const formOverlay = $('#formOverlay');
+let pickedEmoji = '🍽️';
+
+function renderEmojiPicker(){
+  $('#emojiPicker').innerHTML = EMOJIS.map(em =>
+    `<button type="button" class="emoji-opt ${em === pickedEmoji ? 'sel' : ''}" data-em="${em}">${em}</button>`
+  ).join('');
+}
+$('#emojiPicker').addEventListener('click', e => {
+  const b = e.target.closest('[data-em]');
+  if(!b) return;
+  pickedEmoji = b.dataset.em;
+  renderEmojiPicker();
+});
+
+function openForm(){
+  pickedEmoji = '🍽️';
+  renderEmojiPicker();
+  $('#recipeForm').reset();
+  $('#fTime').value = 30;
+  $('#fServe').value = 2;
+  formOverlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => $('#fName').focus(), 320);
+}
+function closeForm(){
+  formOverlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+$('#formCancel').addEventListener('click', closeForm);
+formOverlay.addEventListener('click', e => { if(e.target === formOverlay) closeForm(); });
+
+$('#recipeForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('#fName').value.trim();
+  const ing = $('#fIng').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const steps = $('#fSteps').value.split('\n').map(s => s.trim()).filter(Boolean);
+
+  if(!name || !ing.length || !steps.length){
+    toast('Lengkapi nama, bahan, dan langkah ya!');
+    return;
+  }
+
+  const palette = PALETTE[state.recipes.length % PALETTE.length];
+  const newRecipe = {
+    id: 'u' + Date.now(),
+    name,
+    cat: $('#fCat').value,
+    emoji: pickedEmoji,
+    time: Number($('#fTime').value) || 30,
+    level: $('#fLevel').value,
+    serve: Number($('#fServe').value) || 2,
+    rating: 4.5,
+    g: palette,
+    ing, steps
+  };
+
+  state.recipes.unshift(newRecipe);
+  API.saveRecipes(state.recipes);
+
+  closeForm();
+  state.onlyFav = false;
+  state.cat = 'Semua';
+  state.q = '';
+  searchInput.value = '';
+  searchBox.classList.remove('filled');
+  setNavActive('home');
+  renderChips();
+  renderGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  toast('Resep berhasil ditambahkan 🎉');
+});
+
+/* ---------- 12. BOTTOM NAV ---------- */
+function setNavActive(which){
+  $$('.nav-btn').forEach(b => {
+    if(b.dataset.nav === 'add') return;
+    b.classList.toggle('active', b.dataset.nav === which);
+  });
+}
+
+$('#nav').addEventListener('click', e => {
+  const btn = e.target.closest('.nav-btn');
+  if(!btn) return;
+  const nav = btn.dataset.nav;
+
+  if(nav === 'add'){ openForm(); return; }
+
+  if(nav === 'home'){
+    state.onlyFav = false;
+    state.cat = 'Semua';
+    state.q = '';
+    searchInput.value = '';
+    searchBox.classList.remove('filled');
+    setNavActive('home');
+    renderChips();
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if(nav === 'fav'){
+    state.onlyFav = true;
+    state.q = '';
+    searchInput.value = '';
+    searchBox.classList.remove('filled');
+    setNavActive('fav');
+    renderChips();
+    renderGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+/* ---------- 13. HERO: RESEP ACAK ---------- */
+$('#randomBtn').addEventListener('click', () => {
+  const pool = state.recipes;
+  if(!pool.length) return;
+  const r = pool[Math.floor(Math.random() * pool.length)];
+  openDetail(r.id);
+});
+
+/* ---------- 14. HEADER SHADOW ON SCROLL ---------- */
+const topbar = $('#topbar');
+window.addEventListener('scroll', () => {
+  topbar.classList.toggle('stuck', window.scrollY > 8);
+}, { passive: true });
+
+/* ---------- 15. KEYBOARD ---------- */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    if(detailOverlay.classList.contains('show')) closeDetail();
+    if(formOverlay.classList.contains('show')) closeForm();
+  }
+  // shortcut "/" untuk fokus search
+  if(e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+    e.preventDefault();
+    searchInput.focus();
+  }
+});
+
+/* ---------- 16. BOOT ---------- */
+(function init(){
+  applyTheme();
+  renderChips();
+  renderEmojiPicker();
+  renderGrid();
+  setNavActive('home');
+})();
+</script>
+</body>
+</html>
