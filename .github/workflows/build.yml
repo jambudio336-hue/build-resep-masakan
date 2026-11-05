@@ -1,5 +1,7 @@
 name: build
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -12,9 +14,24 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.7'
+      - name: Siapkan keystore
+        run: echo "${{ secrets.KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/rilis.jks"
       - name: Compile APK
-        run: gradle assembleDebug --no-daemon
+        env:
+          KS_FILE: ${{ runner.temp }}/rilis.jks
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.KEY_PASSWORD }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: gradle assembleRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: payload-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/release/app-release.apk
+      - name: Rilis
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Resep masakan v1.0.${{ github.run_number }}
+          files: app/build/outputs/apk/release/app-release.apk
